@@ -1,0 +1,14 @@
+  284  npx eslint .
+  285  npx eslint .
+  286  npm i -D tsx
+  287  npm i express @types/express
+  288  npx tsc --init
+  289  npm i -D nodemon
+  290  npm install -D supertest
+  291  npm install cors
+  292  npx eslint .
+  293  npm run dev
+  294  npm install dotenv
+  295  npm install @types/cors
+  296  npm run dev
+  297  history
