@@ -4,3 +4,4 @@ coverage
 jest.config.js
 todo.txt
 dist
+print.txt
