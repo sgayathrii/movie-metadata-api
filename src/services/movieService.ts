@@ -1,6 +1,8 @@
 import prisma from "../../prisma";
 
-export const getMovies = async (page: number, pageSize: number) => {
+
+
+export const listMovies = async (page: number, pageSize: number) => {
     try {
 
         const skip = (page - 1) * pageSize;
@@ -19,5 +21,26 @@ export const getMovies = async (page: number, pageSize: number) => {
     } catch (error) {
         console.error('Error fetching movies:', error);
         throw new Error('Failed to fetch movies');
+    }
+};
+
+export const updateMovie = async (id: number, data: Partial<{
+    title: string;
+    overview: string;
+    genres: { id: number; name: string }[]; 
+    releaseDate: Date;
+    runtime: number;
+    voteAverage: number;
+}>) => {
+    try {
+        // Update the movie with the given id
+        const updatedMovie = await prisma.movie.update({
+            where: { id },
+            data,
+        });
+        return updatedMovie;
+    } catch (error) {
+        console.error('Error updating movie:', error);
+        throw new Error('Failed to update movie');
     }
 };
