@@ -1,46 +1,46 @@
-import prisma from "../prisma";
+import prisma from "../prisma"
+import { Prisma } from "@prisma/client";
 import fs from "fs";
 import path from "path";
 import csv from "csv-parser";
-import { Prisma } from "@prisma/client";
 
-interface Genre {
-  id: number;
-  name: string;
-}
-
-interface Movie {
+interface MovieData {
   title: string;
   overview: string;
-  genres: Genre[];
-  releaseDate: string;
-  runtime: number;
-  voteAverage: number;
+  genres: string; 
+  release_date: string;
+  runtime: string;
+  vote_average: string;
 }
 
 const seedDatabase = async () => {
-  await prisma.movie.deleteMany();
+  await prisma.movie.deleteMany(); 
 
-  const movies: (Omit<Movie, 'genres'> & { genres: Prisma.JsonArray })[] = [];
+  const movies: Prisma.MovieCreateManyInput[] = [];
 
   fs.createReadStream(path.resolve(__dirname, '../movies.csv'))
-    .pipe(csv({ separator: ',' }))
-    .on('data', (row) => {
+    .pipe(csv({ separator: ',' })) 
+    .on('data', (row: MovieData) => {
       try {
-        // Ensure all required fields are present
-        if (!row.title || !row.overview || !row.genres || !row.release_date || !row.runtime || !row.vote_average) {
-          throw new Error('Missing required field');
-        }
 
-        // Parse and format the row data
+        // Handle empty or missing fields
+        const title = row.title || 'Unknown Title';
+        const overview = row.overview || 'No overview provided';
+        const genres = row.genres ? JSON.parse(row.genres.replace(/'/g, '"')) as Prisma.JsonArray : [];
+        const releaseDate = row.release_date ? new Date(row.release_date).toISOString() : new Date().toISOString();
+        const runtime = parseFloat(row.runtime) || 0;
+        const voteAverage = parseFloat(row.vote_average) || 0;
+
+
+        // Construct movie object
         const movie = {
-          title: row.title,
-          overview: row.overview,
-          genres: JSON.parse(row.genres.replace(/'/g, '"')) as Prisma.JsonArray,
-          releaseDate: new Date(row.release_date).toISOString(),
-          runtime: parseFloat(row.runtime),
-          voteAverage: parseFloat(row.vote_average),
-        };
+            title,
+            overview,
+            genres,
+            releaseDate,
+            runtime,
+            voteAverage,
+          };
 
         // Ensure parsed values are valid
         if (isNaN(movie.runtime) || isNaN(movie.voteAverage)) {
@@ -65,7 +65,7 @@ const seedDatabase = async () => {
       } catch (error) {
         console.error('Error seeding database', error);
       } finally {
-        await prisma.$disconnect();
+        await prisma.$disconnect(); 
       }
     });
 };
