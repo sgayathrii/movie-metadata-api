@@ -2,6 +2,7 @@ import express, { Request, Response, Application } from 'express';
 import cors from "cors";
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv';
+import movieRoutes from './routes/movieRoutes';
 
 // For env File
 dotenv.config();
@@ -12,6 +13,8 @@ app.use(bodyParser.json())
 
 app.use(express.json());
 app.use(cors());
+
+app.use("/api/movies", movieRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to Express & TypeScript Server');
