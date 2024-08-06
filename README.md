@@ -76,7 +76,7 @@ The Movie API is a RESTful API built with Express and TypeScript, utilizing Pris
 
 - **Example Request:**
 
- ```http
+  ```http
   GET /api/movies?page=1&pageSize=5&title=A Man Apart&genreId=28&sortBy=releaseDate&sortOrder=desc
 
 ### Update Movie
