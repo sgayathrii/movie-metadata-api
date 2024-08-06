@@ -4,8 +4,10 @@ import { listMoviesController, updateMovieController } from "../controllers/movi
 
 const router = express.Router();
 
+// Route to list movies
 router.get("/", listMoviesController);
 
+// Route to update
 router.put("/:id", updateMovieController);
 
 export default router;

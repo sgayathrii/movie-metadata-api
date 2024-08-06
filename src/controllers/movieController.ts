@@ -17,6 +17,7 @@ export const listMoviesController = async (
   next: NextFunction
 ) => {
   try {
+    // Parse query parameters
     const page = parseInt(req.query.page as string, 10);
     const pageSize = parseInt(req.query.pageSize as string, 10);
 
@@ -38,6 +39,7 @@ export const listMoviesController = async (
       sortOrder,
     };
 
+    // Fetch movies using the service function
     const result = await listMovies(page, pageSize, filters, sorting);
 
     res.json({
@@ -63,6 +65,7 @@ export const updateMovieController = async (
   const data = req.body;
 
   try {
+    // Update the movie using the service function
     const updatedMovie = await updateMovie(id, data);
     res.json({ data: updatedMovie });
   } catch (error) {

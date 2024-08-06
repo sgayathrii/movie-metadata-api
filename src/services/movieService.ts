@@ -18,11 +18,14 @@ export const listMovies = async (
   sortBy: MovieSort
 ) => {
   try {
+
+    // Calculate pagination
     const skip = page && pageSize ? (page - 1) * pageSize : undefined;
     const take = pageSize ? pageSize : undefined;
 
     const filterClause: Prisma.MovieWhereInput = {};
 
+    // Add title filter if provided
     if (filterBy.title) {
       filterClause.title = {
         contains: filterBy.title,
@@ -30,6 +33,7 @@ export const listMovies = async (
       };
     }
 
+     // Add genre filter if provided
     if (filterBy.genreId) {
       filterClause.genres = {
         array_contains: [{ id: filterBy.genreId }],
@@ -37,6 +41,7 @@ export const listMovies = async (
       
     }
 
+    // Apply sorting if a field is specified
     const { sortBy: sortField = "title", sortOrder = "asc" } = sortBy;
 
     const orderByClause: Prisma.MovieOrderByWithRelationInput = {};
@@ -45,6 +50,7 @@ export const listMovies = async (
       orderByClause[sortField] = sortOrder;
     }
 
+    // Fetch movies from the database with filters, pagination, and sorting
     const movies = await prisma.movie.findMany({
       where: filterClause,
       skip,
@@ -52,6 +58,7 @@ export const listMovies = async (
       orderBy: orderByClause,
     });
 
+    // Count total movies matching the filter
     const totalCount = await prisma.movie.count({ where: filterClause });
 
     return {
@@ -76,6 +83,7 @@ export const updateMovie = async (
   }>
 ) => {
   try {
+    // Update the movie with the given id
     const updatedMovie = await prisma.movie.update({
       where: { id },
       data,

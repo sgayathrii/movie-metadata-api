@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Movie model definition
 model Movie {
   id          Int      @id @default(autoincrement())
   title       String

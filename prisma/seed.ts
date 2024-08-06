@@ -14,6 +14,7 @@ interface MovieData {
 }
 
 const seedDatabase = async () => {
+  // Delete existing movies to avoid duplication
   await prisma.movie.deleteMany(); 
 
   const movies: Prisma.MovieCreateManyInput[] = [];
@@ -23,7 +24,7 @@ const seedDatabase = async () => {
     .on('data', (row: MovieData) => {
       try {
 
-        // Handle empty or missing fields
+         // Handle empty or missing fields and convert genres from string to JSON
         const title = row.title || 'Unknown Title';
         const overview = row.overview || 'No overview provided';
         const genres = row.genres ? JSON.parse(row.genres.replace(/'/g, '"')) as Prisma.JsonArray : [];
@@ -55,6 +56,7 @@ const seedDatabase = async () => {
     .on('end', async () => {
       try {
         if (movies.length > 0) {
+          // Seed the database with parsed movie data
           await prisma.movie.createMany({
             data: movies,
           });
@@ -65,6 +67,7 @@ const seedDatabase = async () => {
       } catch (error) {
         console.error('Error seeding database', error);
       } finally {
+          // Disconnect Prisma client
         await prisma.$disconnect(); 
       }
     });
