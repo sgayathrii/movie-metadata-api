@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { listMovies, updateMovie } from "../services/movieService";
 
 interface MovieFilter {
@@ -11,7 +11,11 @@ interface MovieSort {
   sortOrder?: "asc" | "desc";
 }
 
-export const listMoviesController = async (req: Request, res: Response) => {
+export const listMoviesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const page = parseInt(req.query.page as string, 10);
     const pageSize = parseInt(req.query.pageSize as string, 10);
@@ -42,17 +46,19 @@ export const listMoviesController = async (req: Request, res: Response) => {
         page: page || 1,
         pageSize: pageSize || 10,
         totalCount: result.totalCount,
-        totalPages: pageSize ? Math.ceil(result.totalCount / pageSize) : 1
+        totalPages: pageSize ? Math.ceil(result.totalCount / pageSize) : 1,
       },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching movies: " + error });
+    next(error);
   }
 };
 
-export const updateMovieController = async (req: Request, res: Response) => {
+export const updateMovieController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const id = parseInt(req.params.id, 10);
   const data = req.body;
 
@@ -60,8 +66,6 @@ export const updateMovieController = async (req: Request, res: Response) => {
     const updatedMovie = await updateMovie(id, data);
     res.json({ data: updatedMovie });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while updating the movie: " + error });
+    next(error);
   }
 };

@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv';
 import movieRoutes from './routes/movieRoutes';
+import { errorHandler } from './middlewares/apiErrorHandler';
 
 // For env File
 dotenv.config();
@@ -19,5 +20,7 @@ app.use("/api/movies", movieRoutes);
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to Express & TypeScript Server');
 });
+
+app.use(errorHandler); 
 
 export default app;
