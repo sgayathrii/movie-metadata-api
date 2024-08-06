@@ -45,12 +45,12 @@ The Movie API is a RESTful API built with Express and TypeScript, utilizing Pris
    
    Initialize Prisma and run migrations:
 
-   npx prisma format
-   npx prisma generate
-   npx prisma migrate dev
+   - npx prisma format
+   - npx prisma generate
+   - npx prisma migrate dev
    
 3. **Populate data from seed.ts**
-   npm run seed
+   - npm run seed
 
 ## API Documentation
 
