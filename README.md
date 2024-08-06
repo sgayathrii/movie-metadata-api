@@ -118,7 +118,9 @@ The Movie API is a RESTful API built with Express and TypeScript, utilizing Pris
 - **Example Request:**
   
   ```http
-  PUT /api/movies/3426 (`3426` is an example of an auto-incremented ID generated when data was populated into the database.)
+  PUT /api/movies/3426 
+  
+ - (`3426` is an example of an auto-incremented ID generated when data was populated into the database.)
 
 ## Testing
 
