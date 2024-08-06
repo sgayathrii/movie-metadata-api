@@ -16,7 +16,7 @@ describe("Movie API Endpoints", () => {
 
 describe('PUT /api/movies/:id', () => {
     it('should update a movie', async () => {
-      const movieId = 2510; 
+      const movieId = 3423; 
       const updatedData = { title: 'Updated Movie Title' };
 
       const response = await request(app)
