@@ -1,18 +1,38 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../prisma";
 
+interface MovieFilter {
+    title?: string;
+    genreId?: number;
+}
 
-
-export const listMovies = async (page: number, pageSize: number) => {
+export const listMovies = async (page: number, pageSize: number, filterBy: MovieFilter) => {
     try {
 
         const skip = (page - 1) * pageSize;
 
+        const filterClause: Prisma.MovieWhereInput = {};
+
+        if (filterBy.title) {
+            filterClause.title = {
+                contains: filterBy.title,
+                mode: 'insensitive', // Case-insensitive search
+            };
+        }
+
+        if (filterBy.genreId) {
+            filterClause.genres = {
+              array_contains: [{ id: filterBy.genreId }], 
+            };
+        }
+
         const movies = await prisma.movie.findMany({
+            where: filterClause,
             skip,
             take: pageSize, 
         });
 
-        const totalCount = await prisma.movie.count();
+        const totalCount = await prisma.movie.count({where: filterClause,});
 
         return {
             movies,

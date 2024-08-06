@@ -6,16 +6,21 @@ export const listMoviesController = async (req: Request, res: Response) => {
         const page = parseInt(req.query.page as string, 10) || 1;
         const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
 
-        const { movies, totalCount } = await listMovies(page, pageSize);
+        const title = req.query.title as string;
+        const genreId = req.query.genreId ? parseInt(req.query.genreId as string, 10) : undefined;
+
+        const filters = {
+            title,
+            genreId
+        };
+
+        const result = await listMovies(page, pageSize, filters);
 
         res.json({
-            data: movies,
-            pagination: {
-                page,
-                pageSize,
-                totalCount,
-                totalPages: Math.ceil(totalCount / pageSize),
-            },
+            movies: result.movies,
+            totalCount: result.totalCount,
+            page,
+            pageSize
         });
     } catch(error) {
         res.status(500).json({ error: 'An error occurred while fetching movies'+error });
